@@ -10,10 +10,4 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    @Provides
-    @Singleton
-    fun providePokemonService(): PokemonService {
-        return PokemonService()
-    }
 }

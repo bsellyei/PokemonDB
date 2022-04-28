@@ -11,7 +11,7 @@ data class Pokemon(
     val weight: Int?,
     @Json(name = "base_experience") val baseExperience: Int?,
     val order: Int?,
-    val types: List<Types?>,
+    val types: List<Types>?,
     val stats: List<Stat>?,
     val sprites: List<Sprite>?
 )

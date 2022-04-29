@@ -2,7 +2,6 @@ package hu.bme.aut.android.pokemondb.mock.network
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import hu.bme.aut.android.pokemondb.di.NetworkModule

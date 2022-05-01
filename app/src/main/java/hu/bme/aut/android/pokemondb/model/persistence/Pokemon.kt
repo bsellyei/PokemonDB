@@ -11,7 +11,7 @@ data class Pokemon(
     @ColumnInfo(name = "height") var height: Int?,
     @ColumnInfo(name = "weight") var weight: Int?,
     @ColumnInfo(name = "baseExp") var baseExp: Int?,
-    @ColumnInfo(name = "types") var types: List<String>?,
+    @ColumnInfo(name = "types") var types: String?,
     @ColumnInfo(name = "hp") var hp: Int?,
     @ColumnInfo(name = "attack") var attack: Int?,
     @ColumnInfo(name = "defense") var defense: Int?,

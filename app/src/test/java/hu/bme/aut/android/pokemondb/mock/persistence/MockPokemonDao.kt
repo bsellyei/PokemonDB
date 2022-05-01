@@ -10,7 +10,7 @@ class MockPokemonDao: PokemonDao {
         height = 8,
         weight = 15,
         baseExp = 20,
-        types = listOf("grass"),
+        types = "grass",
         hp = 35,
         attack = 8,
         defense = 6,

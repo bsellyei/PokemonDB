@@ -1,0 +1,206 @@
+swagger: "2.0"
+info:
+  description: "Mobilszoftver laboratórium Android labor - PokéAPI leírás"
+  version: "1.0.0"
+  title: "PokéAPI"
+host: "pokeapi.co"
+basePath: "/api/v2/"
+tags:
+- name: "Generation"
+  description: ""
+- name: "Pokemon"
+  description: ""
+
+schemes:
+- "http"
+paths:
+  /generation/{generationId}:
+    get:
+      tags:
+      - "Generation"
+      summary: "Returns a Generation"
+      operationId: "GetGeneration"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "generationId"
+        in: "path"
+        description: "Id of generation"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GenerationResult"
+  
+  /pokemon/{pokemonName}:
+    get:
+      tags:
+        - "Pokemon"
+      summary: "Returns a Pokemon"
+      operationId: "GetPokemon"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "pokemonName"
+        in: "path"
+        description: "Name of Pokemon"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Pokemon"
+    delete:
+      tags:
+        - "Pokemon"
+      summary: "Deletes a Pokemon"
+      operationId: "DeletePokemon"
+      produces:
+        - "application/json"
+      parameters:
+      - name: "pokemonName"
+        in: "path"
+        description: "Name of Pokemon"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "delete successful"
+    put:
+      tags:
+        - "Pokemon"
+      summary: "Updates a Pokemon"
+      operationId: "UpdatePokemon"
+      produces:
+        - "application/json"
+      parameters:
+      - name: "pokemonName"
+        in: "path"
+        description: "Name of Pokemon"
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "Pokemon to update"
+        required: true
+        schema: 
+          $ref: "#/definitions/Pokemon"
+      responses:
+        200:
+          description: "update successful"
+  
+  /pokemon:
+    post:
+      tags:
+        - "Pokemon"
+      summary: "Adds a Pokemon"
+      operationId: "AddPokemon"
+      produces:
+        - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Pokemon to add"
+        required: true
+        schema: 
+          $ref: "#/definitions/Pokemon"
+      responses:
+        200:
+          description: "add successful"
+          schema:
+            $ref: "#/definitions/Pokemon"
+
+definitions:
+  GenerationResult:
+    type: "object"
+    properties:
+      species:
+        type: array
+        items:
+          $ref: "#/definitions/Name"
+          
+  Name:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      url:
+        type: "string"
+        
+  Pokemon:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      height:
+        type: "integer"
+        format: "int64"
+      weight:
+        type: "integer"
+        format: "int64"
+      base_experience:
+        type: "integer"
+        format: "int64"
+      order:
+        type: "integer"
+        format: "int64"
+      types:
+        type: array
+        items: 
+          $ref: "#/definitions/Types"
+      stats:
+        type: array
+        items:
+          $ref: "#/definitions/Stat"
+      sprites:
+        type: array
+        items:
+          $ref: "#/definitions/Sprite"
+        
+  Types:
+    type: "object"
+    properties:
+      slot:
+        type: "integer"
+        format: "int64"
+      type:
+        $ref: "#/definitions/Name"
+        
+  Stat:
+    type: "object"
+    properties:
+      base_stat:
+        type: "integer"
+        format: "int64"
+      stat:
+        $ref: "#/definitions/Name"
+        
+  Sprite:
+    type: "object"
+    properties:
+      back_default:
+        type: "string"
+      front_default: 
+        type: "string"
+      other:
+        $ref: "#/definitions/SpriteOther"
+        
+  SpriteOther:
+    type: "object"
+    properties:
+      official_artwork:
+        $ref: "#/definitions/OfficialArtwork"
+        
+  OfficialArtwork:
+    type: "object"
+    properties:
+      front_default:
+        type: "string"
+
+        

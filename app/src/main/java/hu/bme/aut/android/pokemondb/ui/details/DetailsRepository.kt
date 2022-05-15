@@ -10,6 +10,10 @@ class DetailsRepository @Inject constructor(
     private val pokemonDao: PokemonDao
 ) {
 
+    fun getPokemon(id: Long): Pokemon {
+        return pokemonDao.getPokemon(id)
+    }
+
     fun updatePokemon(pokemon: Pokemon) {
         pokemonDao.updatePokemon(pokemon)
     }

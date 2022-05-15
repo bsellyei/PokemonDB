@@ -1,7 +1,7 @@
 package hu.bme.aut.android.pokemondb.mock.network
 
 import dagger.Module
-import dagger.Provides
+import dagger.Binds
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import hu.bme.aut.android.pokemondb.di.NetworkModule
@@ -13,9 +13,9 @@ import javax.inject.Singleton
     components = [SingletonComponent::class],
     replaces = [NetworkModule::class]
 )
-object MockNetworkModule {
+abstract class MockNetworkModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun providePokemonService(): PokemonService = MockPokemonService()
+    abstract fun providePokemonService(mockPokemonService: MockPokemonService): PokemonService
 }

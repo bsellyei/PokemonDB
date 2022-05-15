@@ -14,34 +14,16 @@ class MainRepository @Inject constructor(
     private val pokemonDao: PokemonDao
 ) {
     fun getPokemons(
-        generationId: String = "1",
-        onResponse: (GenerationResult) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
-         pokemonService.getGeneration(generationId).enqueue(object : Callback<GenerationResult> {
-            override fun onResponse(call: Call<GenerationResult>, response: Response<GenerationResult>) {
-                onResponse(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<GenerationResult>, t: Throwable) {
-                onFailure(t)
-            }
-        })
+        generationId: String = "1"
+    ): GenerationResult {
+        val response = pokemonService.getGeneration(generationId).execute()
+        return response.body()!!
     }
 
     fun getPokemon(
-        pokemonName: String,
-        onResponse: (Pokemon) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
-        pokemonService.getPokemon(pokemonName).enqueue(object : Callback<Pokemon> {
-            override fun onResponse(call: Call<Pokemon>, response: Response<Pokemon>) {
-                onResponse(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<Pokemon>, t: Throwable) {
-                onFailure(t)
-            }
-        })
+        pokemonName: String
+    ): Pokemon {
+        val response = pokemonService.getPokemon(pokemonName).execute()
+        return response.body()!!
     }
 }

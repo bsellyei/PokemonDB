@@ -2,6 +2,7 @@ package hu.bme.aut.android.pokemondb.mock.persistence
 
 import android.app.Application
 import androidx.room.Room
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -16,18 +17,8 @@ import javax.inject.Singleton
     components = [SingletonComponent::class],
     replaces = [PersistenceModule::class]
 )
-object MockPersistenceModule {
-    @Provides
+abstract class MockPersistenceModule {
+    @Binds
     @Singleton
-    fun provideAppDatabase(application: Application): AppDatabase {
-        return Room.inMemoryDatabaseBuilder(
-            application,
-            AppDatabase::class.java
-        )
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun providePokemonDao(appDatabase: AppDatabase): PokemonDao = MockPokemonDao()
+    abstract fun providePokemonDao(mockPokemonDao: MockPokemonDao): PokemonDao
 }

@@ -1,23 +1,32 @@
 package hu.bme.aut.android.pokemondb.ui.main
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import coil.ImageLoader
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.pokemondb.model.network.GenerationResult
-import hu.bme.aut.android.pokemondb.model.network.Name
+import hu.bme.aut.android.pokemondb.dto.PokemonDto
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    val imageLoader: ImageLoader
 ) : ViewModel() {
 
-    var pokemons: GenerationResult
+    private val _isLoading: MutableState<Boolean> = mutableStateOf(false)
+    val isLoading: State<Boolean> get() = _isLoading
 
-    init {
-        pokemons = GenerationResult(Name("", ""))
-    }
+    var pokemons: Flow<List<PokemonDto>> = getPokemonsByGeneration()
 
-    fun getPokemons() {
-        pokemons = mainRepository.getPokemons()
+    fun getPokemonsByGeneration(): Flow<List<PokemonDto>> {
+        return mainRepository.getGeneration(
+            generationId = "1",
+            onStart = { _isLoading.value = true },
+            onCompletion = { _isLoading.value = false },
+            onError = { message -> print(message) }
+        )
     }
 }

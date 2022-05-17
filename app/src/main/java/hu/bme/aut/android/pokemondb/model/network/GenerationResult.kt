@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GenerationResult(
-    val species: Name?
+    val pokemon_species: List<Name>?
 )

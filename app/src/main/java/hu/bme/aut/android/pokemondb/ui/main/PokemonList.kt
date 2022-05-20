@@ -32,10 +32,9 @@ fun PokemonList(
     selectPokemon: (Long) -> Unit
 ) {
     val pokemons: List<PokemonDto> by viewModel.pokemons.collectAsState(initial = listOf())
-    val isLoading: Boolean by viewModel.isLoading
 
     ConstraintLayout {
-        val (body, progress) = createRefs()
+        val (body) = createRefs()
         Scaffold(
             backgroundColor = MaterialTheme.colors.primarySurface,
             topBar = { MainAppBar() },
@@ -45,17 +44,6 @@ fun PokemonList(
         ) { innerPadding ->
             val modifier = Modifier.padding(innerPadding)
             PokemonGrid(modifier, pokemons, selectPokemon)
-        }
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .constrainAs(progress) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            )
         }
     }
 }
@@ -107,24 +95,12 @@ private fun PokemonCard(
             CoilImage(
                 imageModel = pokemon.officialArtwork,
                 modifier = Modifier
-                    .aspectRatio(0.8f)
+                    .aspectRatio(1.0f)
                     .constrainAs(image) {
                         centerHorizontallyTo(parent)
                         top.linkTo(parent.top)
                     },
-                contentScale = ContentScale.Crop,
-                failure = {
-                    Column(
-                        modifier = modifier,
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "image request failed",
-                            style = MaterialTheme.typography.body2
-                        )
-                    }
-                }
+                contentScale = ContentScale.Crop
             )
 
             Text(
@@ -135,7 +111,7 @@ private fun PokemonCard(
                     }
                     .padding(8.dp),
                 text = pokemon.name!!,
-                style = MaterialTheme.typography.h2,
+                style = MaterialTheme.typography.body1,
                 textAlign = TextAlign.Center
             )
         }

@@ -21,8 +21,6 @@ class MainRepository @Inject constructor(
     @WorkerThread
     fun getGeneration(
         generationId: String,
-        onStart: () -> Unit,
-        onCompletion: () -> Unit,
         onError: (String) -> Unit
     ) = flow {
         try {
@@ -36,7 +34,7 @@ class MainRepository @Inject constructor(
         } catch(e: Exception) {
             onError(e.localizedMessage!!)
         }
-    }.onStart { onStart() }.onCompletion { onCompletion() }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO)
 
     private fun getPokemon(
         pokemonName: String

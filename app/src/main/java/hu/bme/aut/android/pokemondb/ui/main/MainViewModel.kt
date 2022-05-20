@@ -16,16 +16,11 @@ class MainViewModel @Inject constructor(
     val imageLoader: ImageLoader
 ) : ViewModel() {
 
-    private val _isLoading: MutableState<Boolean> = mutableStateOf(false)
-    val isLoading: State<Boolean> get() = _isLoading
-
     var pokemons: Flow<List<PokemonDto>> = getPokemonsByGeneration()
 
     fun getPokemonsByGeneration(): Flow<List<PokemonDto>> {
         return mainRepository.getGeneration(
             generationId = "1",
-            onStart = { _isLoading.value = true },
-            onCompletion = { _isLoading.value = false },
             onError = { message -> print(message) }
         )
     }

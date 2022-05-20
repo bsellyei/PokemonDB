@@ -1,14 +1,18 @@
 package hu.bme.aut.android.pokemondb.test
 
+import androidx.test.core.app.ApplicationProvider
+import coil.ImageLoader
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import hu.bme.aut.android.pokemondb.mock.network.MockPokemonService
 import hu.bme.aut.android.pokemondb.mock.persistence.MockPokemonDao
-import hu.bme.aut.android.pokemondb.persistence.AppDatabase
 import hu.bme.aut.android.pokemondb.ui.main.MainRepository
 import hu.bme.aut.android.pokemondb.ui.main.MainViewModel
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -47,9 +51,11 @@ class MainViewModelTest {
     }
 
     @Test
-    fun testGetPokemonsSuccess() {
-        viewModel.getPokemons()
-        assertEquals("test", viewModel.pokemons.species!!.name)
-        assertEquals("testURL", viewModel.pokemons.species!!.url)
+    fun testGetPokemonsSuccess() = runBlocking {
+        val id = 1
+        viewModel.pokemons.collectIndexed { _, value ->
+            assertEquals("bulbasaur", value[0].name)
+            assertEquals(id.toLong(), value[0].id)
+        }
     }
 }

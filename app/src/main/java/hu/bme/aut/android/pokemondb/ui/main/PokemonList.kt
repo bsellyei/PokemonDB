@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -123,7 +125,8 @@ private fun MainAppBar() {
     TopAppBar(
         elevation = 6.dp,
         backgroundColor = MaterialTheme.colors.primary,
-        modifier = Modifier.height(58.dp)
+        modifier = Modifier.height(58.dp),
+
     ) {
         Text(
             modifier = Modifier
@@ -134,5 +137,13 @@ private fun MainAppBar() {
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
+
+        Spacer(
+            modifier = Modifier
+        )
+
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(Icons.Filled.Search, "Search")
+        }
     }
 }

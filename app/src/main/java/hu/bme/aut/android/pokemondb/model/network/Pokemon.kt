@@ -13,7 +13,7 @@ data class Pokemon(
     val order: Int?,
     val types: List<Types>?,
     val stats: List<Stat>?,
-    val sprites: List<Sprite>?
+    val sprites: Sprite?
 )
 
 @JsonClass(generateAdapter = true)

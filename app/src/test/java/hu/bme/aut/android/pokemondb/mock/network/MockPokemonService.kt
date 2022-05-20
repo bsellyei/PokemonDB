@@ -1,8 +1,6 @@
 package hu.bme.aut.android.pokemondb.mock.network
 
-import hu.bme.aut.android.pokemondb.model.network.GenerationResult
-import hu.bme.aut.android.pokemondb.model.network.Name
-import hu.bme.aut.android.pokemondb.model.network.Pokemon
+import hu.bme.aut.android.pokemondb.model.network.*
 import hu.bme.aut.android.pokemondb.network.PokemonService
 import okio.Timeout
 import retrofit2.Call
@@ -12,10 +10,10 @@ import retrofit2.Response
 class MockPokemonService : PokemonService {
     override fun getGeneration(generationId: String): Call<GenerationResult> {
         val generationResult = GenerationResult(
-            species = Name(
+            pokemon_species = listOf(Name(
                 name = "test",
                 url = "testURL"
-            )
+            ))
         )
 
         return makeCall(generationResult)
@@ -29,9 +27,9 @@ class MockPokemonService : PokemonService {
             height = 8,
             weight = 15,
             order = 0,
-            sprites = null,
-            stats = null,
-            types = null
+            sprites = Sprite("", "", SpriteOther(OfficialArtwork(""))),
+            stats = listOf(Stat(35, Name("hp", ""))),
+            types = listOf(Types(0, Name("grass", "")))
         )
 
         return makeCall(pokemon)

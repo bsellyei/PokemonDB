@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
+import hu.bme.aut.android.pokemondb.ui.details.PokemonDetails
 
 @Composable
 fun Main() {
@@ -32,7 +33,9 @@ fun Main() {
                 val pokemonId =
                     navBackStackEntry.arguments?.getLong(NavScreen.Details.argument0) ?: return@composable
 
-
+                PokemonDetails(pokemonId = pokemonId, viewModel = hiltViewModel()) {
+                    navController.navigateUp()
+                }
             }
         }
     }

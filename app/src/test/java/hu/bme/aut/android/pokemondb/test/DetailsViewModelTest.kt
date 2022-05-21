@@ -8,7 +8,8 @@ import hu.bme.aut.android.pokemondb.mock.network.MockPokemonService
 import hu.bme.aut.android.pokemondb.mock.persistence.MockPokemonDao
 import hu.bme.aut.android.pokemondb.ui.details.DetailsRepository
 import hu.bme.aut.android.pokemondb.ui.details.DetailsViewModel
-import org.junit.Assert
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -47,9 +48,11 @@ class DetailsViewModelTest {
     }
 
     @Test
-    fun testGetPokemonSuccess() {
-        viewModel.getPokemon()
-        assertEquals("bulbasaur", viewModel.pokemon.name)
-        assertEquals(35, viewModel.pokemon.hp)
+    fun getPokemonTestSuccess() = runBlocking {
+        val id = 1
+        viewModel.getPokemon(id.toLong())
+        val pokemon = viewModel.pokemon.first()
+        assertEquals("bulbasaur", pokemon.name)
+        assertEquals(35, pokemon.hp)
     }
 }

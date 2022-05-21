@@ -60,7 +60,7 @@ private fun PokemonGrid(
         modifier = modifier
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.primary)
     ) {
         StaggeredVerticalGrid(
             maxColumnWidth = 220.dp,

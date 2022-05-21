@@ -5,6 +5,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.pokemondb.model.network.GenerationResult
 import hu.bme.aut.android.pokemondb.model.network.Name
 import hu.bme.aut.android.pokemondb.model.persistence.Pokemon
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,27 +14,11 @@ class DetailsViewModel @Inject constructor(
     private val detailsRepository: DetailsRepository
 ) : ViewModel() {
 
-    var pokemon: Pokemon
+    private val pokemonId: MutableSharedFlow<Long> = MutableSharedFlow(replay = 1)
 
-    init {
-        pokemon = Pokemon(
-            id = 1,
-            name = "bulbasaur",
-            height = 8,
-            weight = 15,
-            baseExp = 20,
-            types = "grass",
-            hp = 35,
-            attack = 8,
-            defense = 6,
-            specialAttack = 4,
-            specialDefense = 2,
-            speed = 6,
-            officialArtwork = "artwork"
-        )
+    val pokemon = pokemonId.flatMapLatest {
+        detailsRepository.getPokemon(it)
     }
 
-    fun getPokemon() {
-        pokemon = detailsRepository.getPokemon(1)
-    }
+    fun getPokemon(id: Long) = pokemonId.tryEmit(id)
 }

@@ -51,7 +51,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun testGetPokemonsSuccess() = runBlocking {
+    fun getPokemonsTestSuccess() = runBlocking {
         val id = 1
         viewModel.pokemons.collectIndexed { _, value ->
             assertEquals("bulbasaur", value[0].name)

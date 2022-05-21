@@ -36,6 +36,20 @@ class MainRepository @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
+    @WorkerThread
+    fun getSinglePokemon(
+        query: String,
+        onError: (String) -> Unit
+    ) = flow {
+        try {
+            val result: MutableList<PokemonDto> = mutableListOf()
+            result.add(getPokemon(query))
+            emit(result)
+        } catch (e: Exception) {
+            onError(e.localizedMessage!!)
+        }
+    }.flowOn(Dispatchers.IO)
+
     private fun getPokemon(
         pokemonName: String
     ): PokemonDto {

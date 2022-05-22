@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,6 +27,7 @@ import com.skydoves.landscapist.coil.CoilImage
 import hu.bme.aut.android.pokemondb.R
 import hu.bme.aut.android.pokemondb.dto.PokemonDto
 import hu.bme.aut.android.pokemondb.ui.custom.StaggeredVerticalGrid
+import hu.bme.aut.android.pokemondb.ui.dialogs.AddNewDialog
 
 @Composable
 fun PokemonList(
@@ -34,12 +36,13 @@ fun PokemonList(
 ) {
     val pokemons by viewModel.pokemons.observeAsState(initial = emptyList())
     val showSearch = remember { mutableStateOf(false) }
+    val showAddNew = remember { mutableStateOf(false) }
 
     ConstraintLayout {
         val (body) = createRefs()
         Scaffold(
             backgroundColor = MaterialTheme.colors.primarySurface,
-            topBar = { MainAppBar(showSearch) },
+            topBar = { MainAppBar(showSearch, showAddNew) },
             modifier = Modifier.constrainAs(body) {
                 top.linkTo(parent.top)
             }
@@ -56,6 +59,19 @@ fun PokemonList(
                     }, onPositiveClick = { searchType, text ->
                         showSearch.value = !showSearch.value
                         viewModel.search(searchType, text)
+                    }
+                )
+            }
+
+            if (showAddNew.value) {
+                AddNewDialog(
+                    onDismiss = {
+                        showAddNew.value = !showAddNew.value
+                    }, onNegativeClick = {
+                        showAddNew.value = !showAddNew.value
+                    }, onPositiveClick = { pokemon ->
+                        showAddNew.value = !showAddNew.value
+                        viewModel.add(pokemon)
                     }
                 )
             }
@@ -135,7 +151,8 @@ private fun PokemonCard(
 
 @Composable
 private fun MainAppBar(
-    showSearch: MutableState<Boolean>
+    showSearch: MutableState<Boolean>,
+    showAddNew: MutableState<Boolean>
 ) {
     TopAppBar(
         elevation = 6.dp,
@@ -156,11 +173,16 @@ private fun MainAppBar(
             modifier = Modifier
         )
 
-
         IconButton(onClick = {
             showSearch.value = true
         }) {
             Icon(Icons.Filled.Search, "Search")
+        }
+
+        IconButton(onClick = {
+            showAddNew.value = true
+        }) {
+            Icon(Icons.Filled.Add, "Add")
         }
     }
 }

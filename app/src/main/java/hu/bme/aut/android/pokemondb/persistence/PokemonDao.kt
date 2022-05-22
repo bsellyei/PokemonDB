@@ -12,11 +12,11 @@ interface PokemonDao {
     fun getPokemon(id: Long): Pokemon
 
     @Insert
-    fun insertPokemon(vararg pokemon: Pokemon)
+    suspend fun insertPokemon(vararg pokemon: Pokemon)
 
     @Update
-    fun updatePokemon(vararg pokemon: Pokemon)
+    suspend fun updatePokemon(vararg pokemon: Pokemon)
 
     @Delete
-    fun deletePokemon(pokemon: Pokemon)
+    suspend fun deletePokemon(pokemon: Pokemon)
 }

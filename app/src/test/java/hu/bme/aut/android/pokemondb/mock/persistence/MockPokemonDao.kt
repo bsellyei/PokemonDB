@@ -24,9 +24,9 @@ class MockPokemonDao: PokemonDao {
 
     override fun getPokemon(id: Long): Pokemon = pokemon
 
-    override fun insertPokemon(vararg pokemon: Pokemon) { }
+    override suspend fun insertPokemon(vararg pokemon: Pokemon) { }
 
-    override fun updatePokemon(vararg pokemon: Pokemon) { }
+    override suspend fun updatePokemon(vararg pokemon: Pokemon) { }
 
-    override fun deletePokemon(pokemon: Pokemon) { }
+    override suspend fun deletePokemon(pokemon: Pokemon) { }
 }

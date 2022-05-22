@@ -58,6 +58,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun add(
+        pokemon: PokemonDto
+    ) {
+        mainRepository.add(pokemon)
+    }
+
     private fun convertSearchCategory(
         category: String
     ): String {

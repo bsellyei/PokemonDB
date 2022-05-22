@@ -1,20 +1,16 @@
 package hu.bme.aut.android.pokemondb.ui.main
 
-import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import hu.bme.aut.android.pokemondb.dto.PokemonDto
 import hu.bme.aut.android.pokemondb.model.network.GenerationResult
 import hu.bme.aut.android.pokemondb.model.network.Pokemon
 import hu.bme.aut.android.pokemondb.network.PokemonService
 import hu.bme.aut.android.pokemondb.persistence.PokemonDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -63,6 +59,35 @@ class MainRepository @Inject constructor(
                 onSuccess(result)
             }
         })
+    }
+
+
+    fun add(
+        pokemon: PokemonDto
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            pokemonDao.insertPokemon(createDbPokemon(pokemon))
+        }
+    }
+
+    private fun createDbPokemon(
+        pokemon: PokemonDto
+    ): hu.bme.aut.android.pokemondb.model.persistence.Pokemon {
+        return hu.bme.aut.android.pokemondb.model.persistence.Pokemon(
+            id = null,
+            name = pokemon.name,
+            weight = pokemon.weight,
+            height = pokemon.height,
+            types = pokemon.types,
+            baseExp = pokemon.baseExp,
+            hp = pokemon.hp,
+            attack = pokemon.attack,
+            defense = pokemon.defense,
+            speed = pokemon.speed,
+            specialAttack = pokemon.specialAttack,
+            specialDefense = pokemon.specialDefense,
+            officialArtwork = ""
+        )
     }
 
     private fun createPokemonDto(

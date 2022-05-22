@@ -5,9 +5,11 @@ import hu.bme.aut.android.pokemondb.dto.PokemonDto
 import hu.bme.aut.android.pokemondb.model.persistence.Pokemon
 import hu.bme.aut.android.pokemondb.network.PokemonService
 import hu.bme.aut.android.pokemondb.persistence.PokemonDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DetailsRepository @Inject constructor(
@@ -39,15 +41,15 @@ class DetailsRepository @Inject constructor(
         emit(pokemon)
     }.flowOn(Dispatchers.IO)
 
-    /*fun getPokemon(id: Long): Pokemon {
-        return pokemonDao.getPokemon(id)
-    }*/
-
     fun updatePokemon(pokemon: Pokemon) {
-        pokemonDao.updatePokemon(pokemon)
+        CoroutineScope(Dispatchers.IO).launch {
+            pokemonDao.updatePokemon(pokemon)
+        }
     }
 
     fun deletePokemon(pokemon: Pokemon) {
-        pokemonDao.deletePokemon(pokemon)
+        CoroutineScope(Dispatchers.IO).launch {
+            pokemonDao.deletePokemon(pokemon)
+        }
     }
 }

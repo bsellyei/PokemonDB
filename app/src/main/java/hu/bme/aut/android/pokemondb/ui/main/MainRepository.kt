@@ -1,20 +1,16 @@
 package hu.bme.aut.android.pokemondb.ui.main
 
-import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import hu.bme.aut.android.pokemondb.dto.PokemonDto
 import hu.bme.aut.android.pokemondb.model.network.GenerationResult
 import hu.bme.aut.android.pokemondb.model.network.Pokemon
 import hu.bme.aut.android.pokemondb.network.PokemonService
 import hu.bme.aut.android.pokemondb.persistence.PokemonDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -65,13 +61,14 @@ class MainRepository @Inject constructor(
         })
     }
 
-    @WorkerThread
+
     fun add(
         pokemon: PokemonDto
-    ) = flow {
-        pokemonDao.insertPokemon(createDbPokemon(pokemon))
-        emit(Unit)
-    }.flowOn(Dispatchers.IO)
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            pokemonDao.insertPokemon(createDbPokemon(pokemon))
+        }
+    }
 
     private fun createDbPokemon(
         pokemon: PokemonDto

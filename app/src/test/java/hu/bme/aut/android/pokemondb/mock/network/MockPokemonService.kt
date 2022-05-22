@@ -11,8 +11,8 @@ class MockPokemonService : PokemonService {
     override fun getGeneration(generationId: String): Call<GenerationResult> {
         val generationResult = GenerationResult(
             pokemon_species = listOf(Name(
-                name = "test",
-                url = "testURL"
+                name = "bulbasaur",
+                url = "https://pokeapi.co/api/v2/pokemon-species/1/"
             ))
         )
 

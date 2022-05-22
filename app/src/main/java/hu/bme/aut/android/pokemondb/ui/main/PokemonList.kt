@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +32,7 @@ fun PokemonList(
     viewModel: MainViewModel,
     selectPokemon: (Long) -> Unit
 ) {
-    val pokemons: List<PokemonDto> by viewModel.pokemons.collectAsState(initial = listOf())
+    val pokemons by viewModel.pokemons.observeAsState(initial = emptyList())
     val showSearch = remember { mutableStateOf(false) }
 
     ConstraintLayout {

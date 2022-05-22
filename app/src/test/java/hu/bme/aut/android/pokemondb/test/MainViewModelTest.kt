@@ -1,5 +1,6 @@
 package hu.bme.aut.android.pokemondb.test
 
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.test.core.app.ApplicationProvider
 import coil.ImageLoader
 import dagger.hilt.android.testing.BindValue
@@ -10,6 +11,7 @@ import hu.bme.aut.android.pokemondb.mock.network.MockPokemonService
 import hu.bme.aut.android.pokemondb.mock.persistence.MockPokemonDao
 import hu.bme.aut.android.pokemondb.ui.main.MainRepository
 import hu.bme.aut.android.pokemondb.ui.main.MainViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -51,11 +53,13 @@ class MainViewModelTest {
     }
 
     @Test
-    fun getPokemonsTestSuccess() = runBlocking {
-        val id = 1
-        viewModel.pokemons.collectIndexed { _, value ->
-            assertEquals("bulbasaur", value[0].name)
-            assertEquals(id.toLong(), value[0].id)
+    fun getPokemonsTestSuccess() {
+        val expectedId = 1
+        viewModel.pokemons.observeForever {
+            it.forEach { pokemon ->
+                assertEquals(expectedId.toLong(), pokemon.id)
+                assertEquals("bulbasaur", pokemon.name)
+            }
         }
     }
 }

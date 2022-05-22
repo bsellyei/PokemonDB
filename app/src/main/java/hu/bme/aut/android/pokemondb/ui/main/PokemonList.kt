@@ -9,9 +9,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,19 +32,33 @@ fun PokemonList(
     viewModel: MainViewModel,
     selectPokemon: (Long) -> Unit
 ) {
-    val pokemons: List<PokemonDto> by viewModel.pokemons.collectAsState(initial = listOf())
+    val pokemons by viewModel.pokemons.observeAsState(initial = emptyList())
+    val showSearch = remember { mutableStateOf(false) }
 
     ConstraintLayout {
         val (body) = createRefs()
         Scaffold(
             backgroundColor = MaterialTheme.colors.primarySurface,
-            topBar = { MainAppBar() },
+            topBar = { MainAppBar(showSearch) },
             modifier = Modifier.constrainAs(body) {
                 top.linkTo(parent.top)
             }
         ) { innerPadding ->
             val modifier = Modifier.padding(innerPadding)
             PokemonGrid(modifier, pokemons, selectPokemon)
+
+            if (showSearch.value) {
+                SearchDialog(
+                    onDismiss = {
+                        showSearch.value = !showSearch.value
+                    }, onNegativeClick = {
+                        showSearch.value = !showSearch.value
+                    }, onPositiveClick = { searchType, text ->
+                        showSearch.value = !showSearch.value
+                        viewModel.search(searchType, text)
+                    }
+                )
+            }
         }
     }
 }
@@ -121,12 +134,13 @@ private fun PokemonCard(
 }
 
 @Composable
-private fun MainAppBar() {
+private fun MainAppBar(
+    showSearch: MutableState<Boolean>
+) {
     TopAppBar(
         elevation = 6.dp,
         backgroundColor = MaterialTheme.colors.primary,
-        modifier = Modifier.height(58.dp),
-
+        modifier = Modifier.height(58.dp)
     ) {
         Text(
             modifier = Modifier
@@ -142,7 +156,10 @@ private fun MainAppBar() {
             modifier = Modifier
         )
 
-        IconButton(onClick = { /*TODO*/ }) {
+
+        IconButton(onClick = {
+            showSearch.value = true
+        }) {
             Icon(Icons.Filled.Search, "Search")
         }
     }

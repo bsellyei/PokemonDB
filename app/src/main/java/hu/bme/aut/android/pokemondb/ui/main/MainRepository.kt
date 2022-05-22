@@ -65,6 +65,34 @@ class MainRepository @Inject constructor(
         })
     }
 
+    @WorkerThread
+    fun add(
+        pokemon: PokemonDto
+    ) = flow {
+        pokemonDao.insertPokemon(createDbPokemon(pokemon))
+        emit(Unit)
+    }.flowOn(Dispatchers.IO)
+
+    private fun createDbPokemon(
+        pokemon: PokemonDto
+    ): hu.bme.aut.android.pokemondb.model.persistence.Pokemon {
+        return hu.bme.aut.android.pokemondb.model.persistence.Pokemon(
+            id = null,
+            name = pokemon.name,
+            weight = pokemon.weight,
+            height = pokemon.height,
+            types = pokemon.types,
+            baseExp = pokemon.baseExp,
+            hp = pokemon.hp,
+            attack = pokemon.attack,
+            defense = pokemon.defense,
+            speed = pokemon.speed,
+            specialAttack = pokemon.specialAttack,
+            specialDefense = pokemon.specialDefense,
+            officialArtwork = ""
+        )
+    }
+
     private fun createPokemonDto(
         pokemon: Pokemon
     ): PokemonDto {

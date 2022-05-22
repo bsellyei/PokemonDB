@@ -58,6 +58,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun add(
+        pokemon: PokemonDto
+    ) {
+        viewModelScope.launch {
+            mainRepository.add(pokemon)
+        }
+    }
+
     private fun convertSearchCategory(
         category: String
     ): String {

@@ -20,3 +20,7 @@ data class Pokemon(
     @ColumnInfo(name = "speed") var speed: Int?,
     @ColumnInfo(name = "officialArtwork") var officialArtwork: String?
 )
+
+data class PokemonId(
+    val id: Long?
+)

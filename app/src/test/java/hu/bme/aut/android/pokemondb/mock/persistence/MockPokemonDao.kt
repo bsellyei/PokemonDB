@@ -1,6 +1,7 @@
 package hu.bme.aut.android.pokemondb.mock.persistence
 
 import hu.bme.aut.android.pokemondb.model.persistence.Pokemon
+import hu.bme.aut.android.pokemondb.model.persistence.PokemonId
 import hu.bme.aut.android.pokemondb.persistence.PokemonDao
 
 class MockPokemonDao: PokemonDao {
@@ -28,5 +29,5 @@ class MockPokemonDao: PokemonDao {
 
     override suspend fun updatePokemon(vararg pokemon: Pokemon) { }
 
-    override suspend fun deletePokemon(pokemon: Pokemon) { }
+    override suspend fun deletePokemon(vararg pokemon: PokemonId) { }
 }

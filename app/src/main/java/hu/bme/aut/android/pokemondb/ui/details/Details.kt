@@ -4,23 +4,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.skydoves.landscapist.coil.CoilImage
 import hu.bme.aut.android.pokemondb.dto.PokemonDto
+import hu.bme.aut.android.pokemondb.ui.dialogs.UpdateDialog
 
 @Composable
 fun PokemonDetails(
@@ -32,18 +30,63 @@ fun PokemonDetails(
         viewModel.getPokemon(pokemonId)
     }
 
+    val showUpdate = remember { mutableStateOf(false) }
+
     val details: PokemonDto? by viewModel.pokemon.collectAsState(initial = null)
     details?.let { pokemon ->
         ConstraintLayout {
             val (body) = createRefs()
             Scaffold(
                 backgroundColor = MaterialTheme.colors.primarySurface,
-                topBar = { DetailsAppBar(pokemon.name!!, pressOnBack) },
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Row(Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1,
+                                    text = details?.name!!
+                                )
+                            }
+                        },
+                        navigationIcon = {
+                            IconButton(
+                                onClick = { pressOnBack() },
+                                enabled = true,
+                            ) {
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                )
+                            }
+                        },
+                        actions = {
+                            Menu(pressOnBack, { showUpdate.value = true }, { viewModel.deletePokemon(details!!.id!!) })
+                        }
+                    )
+                },
                 modifier = Modifier.constrainAs(body) {
                     top.linkTo(parent.top)
                 }
             ) {
                 PokemonDetailsBody(pokemon)
+
+                if (showUpdate.value) {
+                    UpdateDialog(
+                        toUpdate = details!!,
+                        onDismiss = {
+                            showUpdate.value = !showUpdate.value
+                        }, onNegativeClick = {
+                            showUpdate.value = !showUpdate.value
+                        }, onPositiveClick = { pokemon ->
+                            showUpdate.value = !showUpdate.value
+                            viewModel.updatePokemon(pokemon)
+                        }
+                    )
+                }
             }
         }
     }
@@ -181,54 +224,45 @@ fun RowScope.TableCell(
 }
 
 @Composable
-fun DetailsAppBar(
-    title: String,
-    pressOnBack: () -> Unit = {}
+fun Menu(
+    pressOnBack: () -> Unit,
+    pressOnEdit: () -> Unit,
+    pressOnDelete: () -> Unit
 ) {
-    val appBarHorizontalPadding = 4.dp
-    val titleIconModifier = Modifier.fillMaxHeight()
-        .width(72.dp - appBarHorizontalPadding)
+    val expanded = remember { mutableStateOf(false) }
+    Box(
+        Modifier
+            .wrapContentSize(Alignment.TopEnd)
+    ) {
+        IconButton(onClick = {
+            expanded.value = true
+        }) {
+            Icon(
+                Icons.Filled.MoreVert,
+                contentDescription = "More Menu"
+            )
+        }
+    }
 
-    TopAppBar(
-        backgroundColor = Color.Transparent,
-        elevation = 0.dp,
-        modifier= Modifier.fillMaxWidth()) {
+    DropdownMenu(
+        expanded = expanded.value,
+        onDismissRequest = { expanded.value = false },
+    ) {
+        DropdownMenuItem(onClick = {
+            expanded.value = false
+            pressOnEdit()
+        }) {
+            Text("Edit")
+        }
 
-        //TopAppBar Content
-        Box(Modifier.height(32.dp)) {
+        Divider()
 
-            Row(titleIconModifier, verticalAlignment = Alignment.CenterVertically) {
-                CompositionLocalProvider(
-                    LocalContentAlpha provides ContentAlpha.high,
-                ) {
-                    IconButton(
-                        onClick = { pressOnBack() },
-                        enabled = true,
-                    ) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                        )
-                    }
-                }
-            }
-
-            Row(Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically) {
-
-                ProvideTextStyle(value = MaterialTheme.typography.h6) {
-                    CompositionLocalProvider(
-                        LocalContentAlpha provides ContentAlpha.high,
-                    ){
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            text = title
-                        )
-                    }
-                }
-            }
+        DropdownMenuItem(onClick = {
+            expanded.value = false
+            pressOnDelete()
+            pressOnBack()
+        }) {
+            Text("Delete")
         }
     }
 }
